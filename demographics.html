@@ -10,62 +10,242 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        /* Apply Inter font */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom styles for the toggle */
-        .toggle-btn.active {
-            @apply bg-indigo-600 text-white shadow-lg;
-        }
-        .toggle-btn.inactive {
-            @apply bg-white text-gray-600 shadow-sm;
-        }
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-        /* Gradient text for title */
-        .gradient-text {
-            background-image: linear-gradient(to right, #4f46e5, #14b8a6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-    </style>
+        <style>
+            body { font-family: 'Inter', sans-serif; }
+            html { scroll-behavior: smooth; }
+            .gradient-text {
+                background-image: linear-gradient(to right, #4f46e5, #14b8a6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            h2 {
+                background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #14b8a6 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                font-weight: 900 !important;
+            }
+            h3 {
+                background-image: linear-gradient(135deg, #4f46e5 0%, #14b8a6 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                font-weight: 800 !important;
+            }
+            /* Exception: h3 inside colored cards should be white */
+            .bg-gradient-to-br h3,
+            [class*="bg-gradient"] h3 {
+                background: none !important;
+                -webkit-background-clip: unset !important;
+                background-clip: unset !important;
+                color: white !important;
+            }
+            .data-ref {
+                color: #4B5563;
+                border-bottom: 1px dotted #9CA3AF;
+                text-decoration: none;
+                transition: color 0.2s, border-bottom 0.2s;
+            }
+            .data-ref:hover {
+                color: #4f46e5;
+                border-bottom: 1px solid #4f46e5;
+            }
+            .scroll-observe {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.6s, transform 0.6s;
+            }
+            .scroll-observe.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .stat-card {
+                transition: box-shadow 0.3s, transform 0.3s;
+            }
+            .stat-card:hover {
+                box-shadow: 0 8px 32px rgba(79,70,229,0.15);
+                transform: translateY(-4px) scale(1.03);
+            }
+            .toggle-btn.active {
+                background: linear-gradient(90deg, #4f46e5, #14b8a6);
+                color: #fff;
+                box-shadow: 0 2px 8px rgba(79,70,229,0.12);
+                font-weight: 700;
+            }
+            .toggle-btn.inactive {
+                background: #fff;
+                color: #6B7280;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            }
+            .toggle-btn:hover.inactive {
+                background: #f9fafb;
+                color: #4f46e5;
+            }
+            .data-panel {
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.5s;
+            }
+            .data-panel.active {
+                opacity: 1;
+                pointer-events: auto;
+                position: relative;
+            }
+        </style>
+        <script>
+        // Scroll-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+            document.querySelectorAll('.scroll-observe').forEach(el => observer.observe(el));
+
+            // Toggle logic
+            const btn2011 = document.getElementById('btn-2011');
+            const btn2022 = document.getElementById('btn-2022');
+            const panel2011 = document.getElementById('data-2011');
+            const panel2022 = document.getElementById('data-2022');
+            btn2011.addEventListener('click', function() {
+                btn2011.classList.add('active');
+                btn2011.classList.remove('inactive');
+                btn2022.classList.remove('active');
+                btn2022.classList.add('inactive');
+                panel2011.classList.add('active');
+                panel2022.classList.remove('active');
+                triggerCounters(panel2011);
+            });
+            btn2022.addEventListener('click', function() {
+                btn2022.classList.add('active');
+                btn2022.classList.remove('inactive');
+                btn2011.classList.remove('active');
+                btn2011.classList.add('inactive');
+                panel2022.classList.add('active');
+                panel2011.classList.remove('active');
+                triggerCounters(panel2022);
+            });
+            
+
+            // Animated counters
+            function animateCounters(panel) {
+                panel.querySelectorAll('.stat-value').forEach(function(el) {
+                    const target = parseFloat(el.getAttribute('data-value'));
+                    const decimals = el.textContent.includes('.') ? 2 : 0;
+                    let current = 0;
+                    const step = target / 60;
+                    function update() {
+                        current += step;
+                        if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+                            el.textContent = target.toFixed(decimals);
+                        } else {
+                            el.textContent = current.toFixed(decimals);
+                            requestAnimationFrame(update);
+                        }
+                    }
+                    update();
+                });
+            }
+            // Animate counters on panel show
+            function triggerCounters(panel) {
+                setTimeout(() => {
+                    panel.querySelectorAll('.stat-value').forEach(function(el) {
+                        el.textContent = el.getAttribute('data-value').includes('.') ? '0.00' : '0';
+                    });
+                    animateCounters(panel);
+                }, 300);
+            }
+            // Initial animation
+            triggerCounters(panel2011);
+        });
+        </script>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body class="bg-gray-50">
 
-    <!-- Main Container -->
-    <div class="container mx-auto max-w-7xl p-4 md:p-8">
+    <!-- Top Menu Bar -->
+    <nav class="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo / Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-extrabold text-2xl text-indigo-700">Dhaka Interactive Analysis</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex md:items-center md:space-x-1">
+                    <a href="index.html" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Home</a>
+                    <a href="demographics.html" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Demographics</a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 3</a>
+                    <a href="#elections" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 4</a>
+                    <a href="#demographics" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 5</a>
+                    <a href="#timeline" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 6</a>
+                    <a href="#succession" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 7</a>
+                </div>
 
-        <!-- Header -->
-        <header class="text-center my-8 md:my-12">
-            <h1 class="text-4xl md:text-6xl font-black gradient-text">Dhaka in Flux</h1>
-            <p class="text-lg md:text-xl text-gray-600 mt-2">A 2011 vs. 2022 Census Comparison</p>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Hamburger icon -->
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <!-- Close icon (hidden by default) -->
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="demographics.html" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Demographics</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 3</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 4</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 5</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 6</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 7</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Page Header -->
+        <header class="text-center mb-16 pt-8">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4 gradient-text">
+                Dhaka in Flux: 2011 vs 2022
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600">A Census Comparison</p>
             <p class="text-sm text-gray-500">Based on the Population and Housing Census</p>
         </header>
 
         <!-- Section 1: Dhaka District 2011 vs 2022 -->
         <section id="dhaka-district-stats" class="my-16 p-6 md:p-8 bg-white rounded-3xl shadow-xl overflow-hidden">
-            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-8">
+            <h2 class="text-3xl md:text-4xl font-black text-center mb-8">
                 Dhaka District: Then & Now
             </h2>
 
             <!-- Interactive Toggle -->
-            <div class="flex justify-center items-center space-x-2 bg-gray-100 p-2 rounded-full max-w-sm mx-auto mb-10">
-                <button id="btn-2011" class="toggle-btn active w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">
-                    2011
-                </button>
-                <button id="btn-2022" class="toggle-btn inactive w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">
-                    2022
-                </button>
+            <div class="flex justify-center items-center space-x-2 bg-gray-100 p-2 rounded-full max-w-md mx-auto mb-10">
+                <button id="btn-2011" class="toggle-btn active w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">2011</button>
+                <button id="btn-2022" class="toggle-btn inactive w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">2022</button>
             </div>
 
             <!-- Data Panels -->
             <div class="relative">
-                <!-- 2011 Data Panel -->
                 <div id="data-2011" class="data-panel transition-opacity duration-500 ease-in-out">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Card: Total Population 2011 -->
@@ -81,7 +261,7 @@
                             <div class="mt-4 text-left">
                                 <span class="stat-value text-5xl font-black text-blue-600" data-value="12043977">0</span>
                             </div>
-                            <p class="text-gray-500 mt-2">People in Dhaka District (2011).</p>
+                            <p class="text-gray-500 mt-2">People in Dhaka District (2011). <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2011%20Community%20Report/DHAKA%20DIVISION/Com_Dhaka.pdf" class="data-ref" target="_blank">Source: BBS</a></p>
                         </div>
                         
                         <!-- Card: Population Density 2011 -->
@@ -273,7 +453,7 @@
                             <div class="mt-4 text-left">
                                 <span class="stat-value text-5xl font-black text-blue-600" data-value="14734701">0</span>
                             </div>
-                            <p class="text-gray-500 mt-2">People in Dhaka District (2022). <span class="text-green-500 font-semibold">(+22.3%)</span></p>
+                            <p class="text-gray-500 mt-2">People in Dhaka District (2022). <span class="text-green-500 font-semibold">(+22.3%)</span> <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2021%20Community%20Report/DHAKA%20DIVISION/Community%20Report%20Dhaka.pdf" class="data-ref" target="_blank">Source: BBS</a></p>
                         </div>
                         
                         <!-- Card: Population Density 2022 -->
@@ -448,13 +628,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
 
 
         <!-- Section 2: A Tale of Two Cities (North vs. South) -->
         <section id="city-corp-stats" class="my-16">
-            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-10">
+            <h2 class="text-3xl md:text-4xl font-black text-center mb-10">
                 A Tale of Two Cities: North vs. South (2022)
             </h2>
             
@@ -462,8 +640,17 @@
                 
                 <!-- Dhaka North (DNCC) -->
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 md:p-10 rounded-3xl shadow-2xl transform lg:rotate-[-1deg] hover:rotate-0 transition-transform duration-300">
-                    <h3 class="text-4xl font-black text-center mb-8">Dhaka North (DNCC)</h3>
+                    <h3 class="text-4xl font-black text-center mb-8 text-white" style="background: none; color: white !important; -webkit-background-clip: unset; background-clip: unset;">Dhaka North (DNCC)</h3>
                     <ul class="space-y-6">
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m11.52 1.857a3 3 0 00-5.356-1.857m0 0a3 3 0 01-5.356-1.857M9.644 11.857A3 3 0 0112 14c2.651 0 5 2.686 5 6H7c0-3.314 2.349-6 5-6a3 3 0 00-2.356-1.143zM12 14a3 3 0 003-3V5a3 3 0 00-3-3a3 3 0 00-3 3v6a3 3 0 003 3z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="5990723">0</span></span>
+                                <p class="text-blue-200">Total Population (2022) <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2021%20Community%20Report/DHAKA%20DIVISION/Community%20Report%20Dhaka.pdf" class="text-blue-300 hover:text-white underline" target="_blank">BBS</a></p>
+                            </div>
+                        </li>
                         <li class="stat-list-item flex items-center space-x-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -544,8 +731,17 @@
 
                 <!-- Dhaka South (DSCC) -->
                 <div class="bg-gradient-to-br from-teal-500 to-green-600 text-white p-8 md:p-10 rounded-3xl shadow-2xl transform lg:rotate-[1deg] hover:rotate-0 transition-transform duration-300">
-                    <h3 class="text-4xl font-black text-center mb-8">Dhaka South (DSCC)</h3>
+                    <h3 class="text-4xl font-black text-center mb-8 text-white" style="background: none; color: white !important; -webkit-background-clip: unset; background-clip: unset;">Dhaka South (DSCC)</h3>
                     <ul class="space-y-6">
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m11.52 1.857a3 3 0 00-5.356-1.857m0 0a3 3 0 01-5.356-1.857M9.644 11.857A3 3 0 0112 14c2.651 0 5 2.686 5 6H7c0-3.314 2.349-6 5-6a3 3 0 00-2.356-1.143zM12 14a3 3 0 003-3V5a3 3 0 00-3-3a3 3 0 00-3 3v6a3 3 0 003 3z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="4305063">0</span></span>
+                                <p class="text-teal-200">Total Population (2022) <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2021%20Community%20Report/DHAKA%20DIVISION/Community%20Report%20Dhaka.pdf" class="text-teal-300 hover:text-white underline" target="_blank">BBS</a></p>
+                            </div>
+                        </li>
                         <li class="stat-list-item flex items-center space-x-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -629,7 +825,7 @@
 
         <!-- Section 3: Key Takeaways -->
         <section class="my-16">
-            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-10">
+            <h2 class="text-3xl md:text-4xl font-black text-center mb-10">
                 Key Takeaways
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -653,7 +849,7 @@
 
         <!-- Footer -->
         <footer class="text-center my-12">
-            <p class="text-sm text-gray-500">Source: Population and Housing Census 2011 (Com_Dhaka.pdf) & 2022 (Community Report Dhaka.pdf).</p>
+            <p class="text-sm text-gray-500">Source: Population and <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2011%20Community%20Report/DHAKA%20DIVISION/Com_Dhaka.pdf"> Housing Census 2011 (Com_Dhaka.pdf)</a> & <a href="http://203.112.218.101/storage/files/1/Publications/PHC_2021%20Community%20Report/DHAKA%20DIVISION/Community%20Report%20Dhaka.pdf"> 2022 (Community Report Dhaka.pdf).</a></p>
         </footer>
 
     </div>
@@ -787,8 +983,20 @@
                 });
             });
 
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuBtn.querySelector('svg.block').classList.toggle('hidden');
+                    mobileMenuBtn.querySelector('svg.hidden').classList.toggle('hidden');
+                });
+            }
         });
     </script>
+
+    </main>
 
 </body>
 </html>
