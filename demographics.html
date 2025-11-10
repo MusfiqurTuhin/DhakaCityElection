@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhaka in Flux: 2011 vs 2022</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the toggle */
+        .toggle-btn.active {
+            @apply bg-indigo-600 text-white shadow-lg;
+        }
+        .toggle-btn.inactive {
+            @apply bg-white text-gray-600 shadow-sm;
+        }
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Gradient text for title */
+        .gradient-text {
+            background-image: linear-gradient(to right, #4f46e5, #14b8a6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- Main Container -->
+    <div class="container mx-auto max-w-7xl p-4 md:p-8">
+
+        <!-- Header -->
+        <header class="text-center my-8 md:my-12">
+            <h1 class="text-4xl md:text-6xl font-black gradient-text">Dhaka in Flux</h1>
+            <p class="text-lg md:text-xl text-gray-600 mt-2">A 2011 vs. 2022 Census Comparison</p>
+            <p class="text-sm text-gray-500">Based on the Population and Housing Census</p>
+        </header>
+
+        <!-- Section 1: Dhaka District 2011 vs 2022 -->
+        <section id="dhaka-district-stats" class="my-16 p-6 md:p-8 bg-white rounded-3xl shadow-xl overflow-hidden">
+            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-8">
+                Dhaka District: Then & Now
+            </h2>
+
+            <!-- Interactive Toggle -->
+            <div class="flex justify-center items-center space-x-2 bg-gray-100 p-2 rounded-full max-w-sm mx-auto mb-10">
+                <button id="btn-2011" class="toggle-btn active w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">
+                    2011
+                </button>
+                <button id="btn-2022" class="toggle-btn inactive w-1/2 py-3 px-6 rounded-full text-lg font-bold transition-all duration-300 ease-in-out transform hover:scale-105">
+                    2022
+                </button>
+            </div>
+
+            <!-- Data Panels -->
+            <div class="relative">
+                <!-- 2011 Data Panel -->
+                <div id="data-2011" class="data-panel transition-opacity duration-500 ease-in-out">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Card: Total Population 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m11.52 1.857a3 3 0 00-5.356-1.857m0 0a3 3 0 01-5.356-1.857M9.644 11.857A3 3 0 0012 14c2.651 0 5 2.686 5 6H7c0-3.314 2.349-6 5-6a3 3 0 00-2.356-1.143zM12 14a3 3 0 003-3V5a3 3 0 00-3-3a3 3 0 00-3 3v6a3 3 0 003 3z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Total Population</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-blue-600" data-value="12043977">0</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">People in Dhaka District (2011).</p>
+                        </div>
+                        
+                        <!-- Card: Population Density 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-purple-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Population Density</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-purple-600" data-value="8229">0</span>
+                                <span class="text-2xl font-bold text-purple-400">/km²</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">People per square km (2011).</p>
+                        </div>
+
+                        <!-- Card: Annual Growth Rate 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Annual Growth Rate</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-green-600" data-value="3.48">0.00</span>
+                                <span class="text-3xl font-bold text-green-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Avg. annual growth (2001-2011).</p>
+                        </div>
+
+                        <!-- Card: Household Size 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-yellow-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6-4h.01M9 16h.01" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Household Size</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-yellow-600" data-value="4.21">0.00</span>
+                                <span class="text-2xl font-bold text-yellow-400"> people</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Average people per household (2011).</p>
+                        </div>
+
+                        <!-- Card: Sex Ratio 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-pink-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Sex Ratio</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-pink-600" data-value="119">0</span>
+                                <span class="text-2xl font-bold text-pink-400"> males</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Per 100 females (2011).</p>
+                        </div>
+                        
+                        <!-- Card: Literacy Rate 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-teal-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Literacy Rate (7+)</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-teal-600" data-value="70.54">0.00</span>
+                                <span class="text-3xl font-bold text-teal-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Population aged 7 years and above (2011).</p>
+                        </div>
+                        
+                        <!-- Card: Housing Quality 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-orange-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Pucca Housing</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-orange-600" data-value="45.60">0.00</span>
+                                <span class="text-3xl font-bold text-orange-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households in permanent 'Pucca' structures (2011).</p>
+                        </div>
+                        
+                        <!-- Card: Electricity 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-yellow-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Electricity Access</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-yellow-500" data-value="97.01">0.00</span>
+                                <span class="text-3xl font-bold text-yellow-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with electricity in 2011.</p>
+                        </div>
+                        
+                        <!-- Card: Urbanization 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-indigo-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Urban Population</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-indigo-600" data-value="76.26">0.00</span>
+                                <span class="text-3xl font-bold text-indigo-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Percentage of population in urban areas (2011).</p>
+                        </div>
+
+                        <!-- Card: Drinking Water 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a7 7 0 1010 0a7 7 0 00-10 0zM12 21a9 9 0 100-18 9 9 0 000 18z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 100-6 3 3 0 000 6z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Tap Water Access</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-blue-600" data-value="66.41">0.00</span>
+                                <span class="text-3xl font-bold text-blue-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with tap/pipe drinking water (2011).</p>
+                        </div>
+
+                        <!-- Card: Toilet 2011 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12 12 0 0012 21.697z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Sanitary Toilet</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-green-600" data-value="93.49">0.00</span>
+                                <span class="text-3xl font-bold text-green-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with sanitary facilities (2011).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2022 Data Panel (Hidden by default) -->
+                <div id="data-2022" class="data-panel absolute top-0 left-0 w-full opacity-0 hidden transition-opacity duration-500 ease-in-out">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Card: Total Population 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m11.52 1.857a3 3 0 00-5.356-1.857m0 0a3 3 0 01-5.356-1.857M9.644 11.857A3 3 0 0012 14c2.651 0 5 2.686 5 6H7c0-3.314 2.349-6 5-6a3 3 0 00-2.356-1.143zM12 14a3 3 0 003-3V5a3 3 0 00-3-3a3 3 0 00-3 3v6a3 3 0 003 3z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Total Population</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-blue-600" data-value="14734701">0</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">People in Dhaka District (2022). <span class="text-green-500 font-semibold">(+22.3%)</span></p>
+                        </div>
+                        
+                        <!-- Card: Population Density 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-purple-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Population Density</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-purple-600" data-value="10067">0</span>
+                                <span class="text-2xl font-bold text-purple-400">/km²</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">People per square km (2022). <span class="text-green-500 font-semibold">(Denser)</span></p>
+                        </div>
+
+                        <!-- Card: Annual Growth Rate 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Annual Growth Rate</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-green-600" data-value="1.79">0.00</span>
+                                <span class="text-3xl font-bold text-green-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Avg. annual growth (2011-2022). <span class="text-red-500 font-semibold">(Slower)</span></p>
+                        </div>
+
+                        <!-- Card: Household Size 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-yellow-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6-4h.01M9 16h.01" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Household Size</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-yellow-600" data-value="3.62">0.00</span>
+                                <span class="text-2xl font-bold text-yellow-400"> people</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Average people per household (2022). <span class="text-red-500 font-semibold">(Smaller)</span></p>
+                        </div>
+
+                        <!-- Card: Sex Ratio 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-pink-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Sex Ratio</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-pink-600" data-value="115.60">0.00</span>
+                                <span class="text-2xl font-bold text-pink-400"> males</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Per 100 females (2022). <span class="text-green-500 font-semibold">(More balanced)</span></p>
+                        </div>
+                        
+                        <!-- Card: Literacy Rate 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-teal-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Literacy Rate (7+)</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-teal-600" data-value="84.88">0.00</span>
+                                <span class="text-3xl font-bold text-teal-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Population aged 7 years and above (2022). <span class="text-green-500 font-semibold">(Big jump!)</span></p>
+                        </div>
+                        
+                        <!-- Card: Housing Quality 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-orange-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Pucca Housing</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-orange-600" data-value="67.83">0.00</span>
+                                <span class="text-3xl font-bold text-orange-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households in permanent 'Pucca' structures (2022). <span class="text-green-500 font-semibold">(Improved)</span></p>
+                        </div>
+                        
+                        <!-- Card: Electricity 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-yellow-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Electricity Access</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-yellow-500" data-value="99.60">0.00</span>
+                                <span class="text-3xl font-bold text-yellow-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with electricity in 2022. <span class="text-green-500 font-semibold">(Nearly universal)</span></p>
+                        </div>
+
+                        <!-- Card: Urbanization 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-indigo-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Urban Population</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-indigo-600" data-value="77.36">0.00</span>
+                                <span class="text-3xl font-bold text-indigo-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Percentage of population in urban areas (2022). <span class="text-green-500 font-semibold">(Slightly up)</span></p>
+                        </div>
+
+                        <!-- Card: Drinking Water 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a7 7 0 1010 0a7 7 0 00-10 0zM12 21a9 9 0 100-18 9 9 0 000 18z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 11a3 3 0 100-6 3 3 0 000 6z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Tap Water Access</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-blue-600" data-value="61.50">0.00</span>
+                                <span class="text-3xl font-bold text-blue-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with tap/pipe drinking water (2022). <span class="text-red-500 font-semibold">(Slightly down)</span></p>
+                        </div>
+
+                        <!-- Card: Toilet 2022 -->
+                        <div class="stat-card bg-gray-50 p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12 12 0 0012 21.697z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">Safe Disposal</h3>
+                            </div>
+                            <div class="mt-4 text-left">
+                                <span class="stat-value text-5xl font-black text-green-600" data-value="86.87">0.00</span>
+                                <span class="text-3xl font-bold text-green-400"> %</span>
+                            </div>
+                            <p class="text-gray-500 mt-2">Households with safe toilet disposal (2022).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 2: A Tale of Two Cities (North vs. South) -->
+        <section id="city-corp-stats" class="my-16">
+            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-10">
+                A Tale of Two Cities: North vs. South (2022)
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                
+                <!-- Dhaka North (DNCC) -->
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 md:p-10 rounded-3xl shadow-2xl transform lg:rotate-[-1deg] hover:rotate-0 transition-transform duration-300">
+                    <h3 class="text-4xl font-black text-center mb-8">Dhaka North (DNCC)</h3>
+                    <ul class="space-y-6">
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="30531">0</span> /km²</span>
+                                <p class="text-blue-200">Population Density</p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="7.95">0.00</span>%</span>
+                                <p class="text-blue-200">Slum Population <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                         <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="58.35">0.00</span>%</span>
+                                <p class="text-blue-200">Internet Usage (5+ yrs) <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                         <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="60.84">0.00</span>%</span>
+                                <p class="text-blue-200">Financial Inclusion (15+ yrs) <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <!-- SVG Icon: Smartphone -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="73.98">0.00</span>%</span>
+                                <p class="text-blue-200">Female Mobile Phone (5+ yrs) <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="61.59">0.00</span>%</span>
+                                <p class="text-blue-200">Basic Sanitation</p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343m11.314 11.314a8 8 0 00-11.314-11.314m11.314 11.314L6.343 7.343" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6.75 6.75 0 006.75-6.75c0-3.52-2.31-6.42-5.41-6.42a.75.75 0 00-.59.29L9 9.75" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6.75 6.75 0 01-6.75-6.75C5.25 8.48 7.56 5.58 10.66 5.58a.75.75 0 01.59.29L15 9.75" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="94.65">0.00</span>%</span>
+                                <p class="text-blue-200">Access to Clean Fuel</p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="23.33">0.00</span>%</span>
+                                <p class="text-blue-200">Youth (NEET) (15-24) <span class="font-bold text-white">(Lower)</span></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Dhaka South (DSCC) -->
+                <div class="bg-gradient-to-br from-teal-500 to-green-600 text-white p-8 md:p-10 rounded-3xl shadow-2xl transform lg:rotate-[1deg] hover:rotate-0 transition-transform duration-300">
+                    <h3 class="text-4xl font-black text-center mb-8">Dhaka South (DSCC)</h3>
+                    <ul class="space-y-6">
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="39406">0</span> /km²</span>
+                                <p class="text-teal-200">Population Density <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="3.88">0.00</span>%</span>
+                                <p class="text-teal-200">Slum Population <span class="font-bold text-white">(Lower)</span></p>
+                            </div>
+                        </li>
+                         <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="54.70">0.00</span>%</span>
+                                <p class="text-teal-200">Internet Usage (5+ yrs)</p>
+                            </div>
+                        </li>
+                         <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="54.07">0.00</span>%</span>
+                                <p class="text-teal-200">Financial Inclusion (15+ yrs)</p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <!-- SVG Icon: Smartphone -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="65.61">0.00</span>%</span>
+                                <p class="text-teal-200">Female Mobile Phone (5+ yrs)</p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12 12 0 0012 21.697z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="65.11">0.00</span>%</span>
+                                <p class="text-teal-200">Basic Sanitation <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343m11.314 11.314a8 8 0 00-11.314-11.314m11.314 11.314L6.343 7.343" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6.75 6.75 0 006.75-6.75c0-3.52-2.31-6.42-5.41-6.42a.75.75 0 00-.59.29L9 9.75" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6.75 6.75 0 01-6.75-6.75C5.25 8.48 7.56 5.58 10.66 5.58a.75.75 0 01.59.29L15 9.75" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="95.53">0.00</span>%</span>
+                                <p class="text-teal-200">Access to Clean Fuel <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                        <li class="stat-list-item flex items-center space-x-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <span class="text-3xl font-bold"><span class="stat-value" data-value="25.57">0.00</span>%</span>
+                                <p class="text-teal-200">Youth (NEET) (15-24) <span class="font-bold text-white">(Higher)</span></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 3: Key Takeaways -->
+        <section class="my-16">
+            <h2 class="text-3xl md:text-4xl font-black text-center text-gray-900 mb-10">
+                Key Takeaways
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Takeaway 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-xl font-bold text-indigo-600 mb-2">Slower, Denser Growth</h3>
+                    <p class="text-gray-600">The population is still growing, but the annual growth rate has slowed significantly. The district has become much denser, packing more people into the same area.</p>
+                </div>
+                <!-- Takeaway 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-xl font-bold text-teal-600 mb-2">Improving Living Standards</h3>
+                    <p class="text-gray-600">There's been a major jump in literacy (+14 points) and a significant shift from semi-permanent to permanent 'Pucca' housing, showing a clear quality of life improvement.</p>
+                </div>
+                <!-- Takeaway 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-xl font-bold text-purple-600 mb-2">A Tale of Two Cities</h3>
+                    <p class="text-gray-600">DSCC is the denser, older core with slightly better basic sanitation. DNCC, while having more slums, leads in tech adoption, financial inclusion, and female mobile use.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center my-12">
+            <p class="text-sm text-gray-500">Source: Population and Housing Census 2011 (Com_Dhaka.pdf) & 2022 (Community Report Dhaka.pdf).</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn2011 = document.getElementById('btn-2011');
+            const btn2022 = document.getElementById('btn-2022');
+            const data2011 = document.getElementById('data-2011');
+            const data2022 = document.getElementById('data-2022');
+
+            // Toggle function
+            function show2011() {
+                btn2011.classList.add('active');
+                btn2011.classList.remove('inactive');
+                btn2022.classList.add('inactive');
+                btn2022.classList.remove('active');
+                
+                data2011.classList.remove('hidden', 'opacity-0');
+                data2011.classList.remove('absolute');
+                data2022.classList.add('hidden', 'opacity-0');
+                data2022.classList.add('absolute');
+            }
+
+            function show2022() {
+                btn2022.classList.add('active');
+                btn2022.classList.remove('inactive');
+                btn2011.classList.add('inactive');
+                btn2011.classList.remove('active');
+
+                data2022.classList.remove('hidden', 'opacity-0');
+                data2022.classList.remove('absolute');
+                data2011.classList.add('hidden', 'opacity-0');
+                data2011.classList.add('absolute');
+            }
+
+            btn2011.addEventListener('click', show2011);
+            btn2022.addEventListener('click', show2022);
+
+            // --- Number Animation Logic ---
+
+            // Function to animate a value
+            const animateValue = (el, start, end, duration) => {
+                let startTime = null;
+                const isFloat = end % 1 !== 0;
+
+                const step = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+                    const currentValue = progress * (end - start) + start;
+
+                    if (isFloat) {
+                        el.innerText = currentValue.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    } else {
+                        el.innerText = Math.floor(currentValue).toLocaleString('en-US');
+                    }
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        // Ensure final value is exact
+                        if (isFloat) {
+                             el.innerText = end.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                        } else {
+                            el.innerText = end.toLocaleString('en-US');
+                        }
+                    }
+                };
+                window.requestAnimationFrame(step);
+            };
+
+            // Intersection Observer to trigger animations
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statEl = entry.target.querySelector('.stat-value');
+                        if (statEl && !statEl.dataset.animated) {
+                            const targetValue = parseFloat(statEl.dataset.value);
+                            statEl.dataset.animated = 'true'; // Mark as animated
+                            animateValue(statEl, 0, targetValue, 1500); // Animate over 1.5 seconds
+                            observer.unobserve(entry.target); // Stop observing once animated
+                        }
+                    }
+                });
+            };
+
+            const observerOptions = {
+                root: null,
+                threshold: 0.1
+            };
+
+            const statObserver = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Observe all stat cards and list items
+            const targets = document.querySelectorAll('.stat-card, .stat-list-item');
+            targets.forEach(target => statObserver.observe(target));
+            
+            // Re-observe when tabs are clicked
+            // This is tricky because unobserve is permanent.
+            // A simpler way: Animate all on load, but we want scroll trigger.
+            // Let's re-run the animation trigger on tab switch for the new panel.
+            
+            btn2011.addEventListener('click', () => {
+                // Find all stats in the 2011 panel that haven't been animated
+                data2011.querySelectorAll('.stat-card').forEach(card => {
+                    const statEl = card.querySelector('.stat-value');
+                    if (statEl && !statEl.dataset.animated) {
+                        const targetValue = parseFloat(statEl.dataset.value);
+                        statEl.dataset.animated = 'true';
+                        animateValue(statEl, 0, targetValue, 1500);
+                    }
+                });
+            });
+            
+            btn2022.addEventListener('click', () => {
+                // Find all stats in the 2022 panel that haven't been animated
+                data2022.querySelectorAll('.stat-card').forEach(card => {
+                    const statEl = card.querySelector('.stat-value');
+                    if (statEl && !statEl.dataset.animated) {
+                        const targetValue = parseFloat(statEl.dataset.value);
+                        statEl.dataset.animated = 'true';
+                        animateValue(statEl, 0, targetValue, 1500);
+                    }
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>

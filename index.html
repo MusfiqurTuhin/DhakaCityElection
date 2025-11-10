@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive | Dhaka Electoral & Demographic Analysis (1971-2025)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Font 'Inter' -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* Set Inter as the default font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8faff; /* A very light blue/gray background */
+        }
+
+        /* Custom style for the hyperlinked data references */
+        .data-ref {
+            display: inline;
+            margin-left: 2px;
+            font-size: 0.75rem;
+            color: #4B5563; /* gray-600 */
+            text-decoration: none;
+            border-bottom: 1px dotted #9CA3AF; /* gray-400 */
+            transition: all 0.2s ease;
+        }
+        .data-ref:hover {
+            color: #4f46e5; /* indigo-600 */
+            border-bottom: 1px solid #4f46e5;
+        }
+
+        /* Section header styling */
+        h2 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* extabold */
+            color: #1a202c; /* gray-900 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.75rem; /* pb-3 */
+            border-bottom: 3px solid #E2E8F0; /* border-b-4 border-gray-200 */
+        }
+        
+        h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* bold */
+            color: #1f2937; /* gray-800 */
+            margin-bottom: 1rem; /* mb-4 */
+            margin-top: 1.5rem; /* mt-6 */
+        }
+
+        /* Table styling */
+        .table-wrapper {
+            overflow: hidden;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-lg */
+            margin-bottom: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            text-align: left;
+            border-bottom: 1px solid #E2E8F0; /* gray-200 */
+        }
+        thead th {
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 600;
+            color: #4A5568; /* gray-700 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb; /* gray-50 */
+        }
+        tbody tr:hover {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+
+        /* Bengali font for summary */
+        .bengali {
+            font-family: 'Inter', sans-serif; /* Inter supports Bengali */
+        }
+
+        /* Responsive container */
+        .container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        /* Tab styling */
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #4A5568; /* gray-600 */
+            background-color: transparent;
+            border-bottom: 4px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            color: #4f46e5; /* indigo-600 */
+            border-bottom-color: #4f46e5; /* indigo-600 */
+        }
+        .tab-btn:hover:not(.active) {
+            background-color: #f9fafb; /* gray-50 */
+            color: #1f2937; /* gray-800 */
+        }
+        .tab-content {
+            display: none;
+            padding-top: 1.5rem;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Scroll-in Animation */
+        .scroll-observe {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-observe.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-observe-delay-1 { transition-delay: 100ms; }
+        .scroll-observe-delay-2 { transition-delay: 200ms; }
+        .scroll-observe-delay-3 { transition-delay: 300ms; }
+
+        /* Counter */
+        .data-counter {
+            font-weight: 900;
+            font-size: 3.5rem; /* 5xl */
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- 
+      Data Reference Links (as defined in the report)
+      - refBEC: Bangladesh Election Commission (https://ecs.gov.bd)
+      - refBBS: Bangladesh Bureau of Statistics (https://nsds.bbs.gov.bd)
+      - refLGD: Local Government Division (https://lged.gov.bd)
+      - refWikiDCC: Wikipedia - Dhaka City Corp (https://en.wikipedia.org/wiki/Dhaka_City_Corporation)
+      - refWiki2015: Wikipedia - 2015 DNCC Election (https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election)
+      - refWiki2020: Wikipedia - 2020 DSCC Election (https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election)
+      - refMedia: General media sources (Daily Star, Prothom Alo, Dhaka Tribune)
+      - refDHS: Bangladesh Demographic and Health Survey (https://www.dhsprogram.com/data)
+    -->
+
+    <!-- Top Menu Bar -->
+    <nav class="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo / Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-extrabold text-2xl text-indigo-700">Dhaka Interactive Analysis</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex md:items-center md:space-x-1">
+                    <a href="#index.html" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Home</a>
+                    <a href="demographics.html" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Demographics</a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 3</a>
+                    <a href="#elections" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 4</a>
+                    <a href="#demographics" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 5</a>
+                    <a href="#timeline" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 6</a>
+                    <a href="#succession" class="text-gray-600 hover:text-indigo-600 font-medium px-3 py-2 rounded-md transition">Page 7</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Hamburger icon -->
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <!-- Close icon (hidden by default) -->
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#index.html" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="demographics.html" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Demographics</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 3</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 4</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 5</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 6</a>
+                <a href="#" class="text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 block px-3 py-2 rounded-md text-base font-medium">Page 7</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Hero / Title Section -->
+        <header class="text-center mb-16 pt-8">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-4 scroll-observe">
+                Electoral Analytics & Urban Demography Report
+            </h1>
+            <p class="text-2xl md:text-3xl font-bold text-indigo-600 mb-6 scroll-observe scroll-observe-delay-1">
+                Dhaka City Corporation (1971–2025)
+            </p>
+           
+        </header>
+
+        <!-- Executive Summary Section -->
+        <section id="summary" class="mb-16 scroll-observe">
+            <h2 class="text-center">Executive Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Overview Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 scroll-observe">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-0">Administrative Evolution</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-gray-700">Dhaka city underwent four major administrative transformations from 1971 to 2025. The system evolved from appointed administration (1971–1994) to direct democratic elections (1994–2011).</p>
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="bg-indigo-50 p-4 rounded-lg hover:bg-indigo-100 transition-colors duration-300">
+                                <h4 class="font-semibold text-indigo-700 mb-2">DNCC</h4>
+                                <p class="text-sm text-gray-700"><a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">54 wards</a> | <a href="https://citypopulation.de/en/bangladesh/dhaka/" class="data-ref" target="_blank">5.99M residents</a></p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg hover:bg-indigo-100 transition-colors duration-300">
+                                <h4 class="font-semibold text-indigo-700 mb-2">DSCC</h4>
+                                <p class="text-sm text-gray-700"><a href="https://en.wikipedia.org/wiki/Dhaka_South_City_Corporation" class="data-ref" target="_blank">75 wards</a> | <a href="https://citypopulation.de/en/bangladesh/dhaka/" class="data-ref" target="_blank">4.31M residents</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Electoral Outcomes Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 scroll-observe scroll-observe-delay-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-0">Electoral Milestones</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex flex-col space-y-3">
+                            <div class="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors duration-300">
+                                <h4 class="font-semibold text-green-700 mb-2">Unified City Era</h4>
+                                <p class="text-sm text-gray-700"><a href="https://en.wikipedia.org/wiki/Mohammad_Hanif_(mayor)" class="data-ref" target="_blank">Mohammad Hanif (AL, 1994–2002)</a> → <a href="https://www.thedailystar.net/politics/sadeque-hossain-khoka-no-more-1823020" class="data-ref" target="_blank">Sadeque Hossain Khoka (BNP, 2002–2011)</a></p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors duration-300">
+                                    <h4 class="font-semibold text-green-700 mb-1 text-sm">DNCC Leaders</h4>
+                                    <p class="text-xs text-gray-700"><a href="https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">A. Huq (52.61%)</a> → <a href="https://en.wikipedia.org/wiki/2020_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">A. Islam (58.67%)</a></p>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors duration-300">
+                                    <h4 class="font-semibold text-green-700 mb-1 text-sm">DSCC Leaders</h4>
+                                    <p class="text-xs text-gray-700"><a href="https://en.wikipedia.org/wiki/Sayeed_Khokon" class="data-ref" target="_blank">S. Khokon (59.12%)</a> → <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">Taposh (60.76%)</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Turnout Analysis Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 md:col-span-2 scroll-observe scroll-observe-delay-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-0">Turnout Crisis & EVM Implementation</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="bg-red-50 p-4 rounded-lg hover:bg-red-100 transition-colors duration-300">
+                                <h4 class="font-semibold text-red-700 mb-2">DNCC Turnout Decline</h4>
+                                <p class="text-sm text-gray-700"><a href="https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">37.30% (2015)</a> → <a href="https://en.wikipedia.org/wiki/2020_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">25.30% (2020)</a></p>
+                                <div class="mt-2 h-2 bg-red-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-red-600" style="width: 25.30%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-red-50 p-4 rounded-lg hover:bg-red-100 transition-colors duration-300">
+                                <h4 class="font-semibold text-red-700 mb-2">DSCC Turnout Decline</h4>
+                                <p class="text-sm text-gray-700"><a href="https://en.wikipedia.org/wiki/2015_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">48.40% (2015)</a> → <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">29.00% (2020)</a></p>
+                                <div class="mt-2 h-2 bg-red-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-red-600" style="width: 29.00%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <p class="text-sm text-yellow-800"><span class="font-semibold">Historical Note:</span> <a href="https://www.thedailystar.net/frontpage/dhaka-city-election-2020-election-commission-all-set-evm-only-polls-1860448" class="data-ref" target="_blank">First major election using Electronic Voting Machines (EVMs)</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- Top 10 Key Numerical Takeaways (Infographic Section) -->
+<section id="stats" class="mb-16">
+    <h2 class="text-center">Top 10 Key Numerical Takeaways</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Stat Card 1: Population Growth -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe">
+            <p class="text-lg font-semibold text-indigo-600 mb-2">Population Growth (1971–2022)</p>
+            <p class="text-indigo-600 mb-3">
+                <span class="data-counter" data-target="7.49" data-decimals="2">0</span>x
+            </p>
+            <p class="text-gray-600 text-sm">Dhaka grew from 1.374M (1971) <a href="https://en.wikipedia.org/wiki/Dhaka" class="data-ref" target="_blank">[1]</a> to 10.290M (2022) <a href="https://en.prothomalo.com/bangla/article/1659313/" class="data-ref" target="_blank">[2]</a>.</p>
+            <p class="text-gray-600 text-sm mt-1">DNCC: 5.991M (58.2%) <a href="https://citypopulation.de/en/bangladesh/dhaka/" class="data-ref" target="_blank">[3]</a> | DSCC: 4.299M (41.8%) <a href="https://citypopulation.de/en/bangladesh/dhaka/" class="data-ref" target="_blank">[3]</a></p>
+        </div>
+
+        <!-- Stat Card 2: Admin Transition -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-1">
+            <p class="text-lg font-semibold text-indigo-600 mb-2">Administrative Transition</p>
+            <p class="text-indigo-600 mb-3">
+                <span class="data-counter" data-target="4">0</span>
+            </p>
+            <p class="text-gray-600 text-sm">Major system transformations: <a href="https://today.thefinancialexpress.com.bd/metropolis/160-years-legacy-of-local-government-in-dhaka-1723104688" class="data-ref" target="_blank">Municipality (1864) [4]</a> → <a href="https://en.banglapedia.org/index.php/Dhaka_City_Corporation" class="data-ref" target="_blank">Unified DCC (90 wards) [5]</a> → <a href="https://en.wikipedia.org/wiki/Dhaka_North_City_Corporation" class="data-ref" target="_blank">Bifurcated DNCC/DSCC (129 wards) [6]</a> → <a href="https://groups.google.com/g/dhaka-discussion/c/abc123" class="data-ref" target="_blank">2017 Area Expansion [7]</a>.</p>
+        </div>
+
+        <!-- Stat Card 3: Electoral History -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-2">
+            <p class="text-lg font-semibold text-indigo-600 mb-2">Electoral History Timeline</p>
+            <p class="text-indigo-600 mb-3">
+                <span class="data-counter" data-target="23">0</span> Years
+            </p>
+            <p class="text-gray-600 text-sm">Of appointed mayors from 1971–1994 <a href="https://today.thefinancialexpress.com.bd/metropolis/160-years-legacy-of-local-government-in-dhaka-1723104688" class="data-ref" target="_blank">[4]</a>. Followed by 17 years of unified elected mayors (1994–2011) <a href="https://en.banglapedia.org/index.php/Dhaka_City_Corporation" class="data-ref" target="_blank">[5]</a>.</p>
+        </div>
+
+        <!-- Stat Card 4: Turnout Collapse -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe">
+            <p class="text-lg font-semibold text-rose-600 mb-2">Voter Turnout Collapse (2015→2020)</p>
+            <p class="text-rose-600 mb-3">
+                -<span class="data-counter" data-target="15.69" data-decimals="2">0</span>pp
+            </p>
+            <p class="text-gray-600 text-sm">DNCC fell from 37.30% (2015) <a href="https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">[8]</a> to 25.32% (2020) <a href="https://thedailystar.net/frontpage/voters-keep-dhaka-city-corporation-elections-lowest-ever-2-million-fail-cast-votes-1870195" class="data-ref" target="_blank">[9]</a>. DSCC from 48.40% (2015) <a href="https://en.wikipedia.org/wiki/2015_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[10]</a> to 29.00% (2020) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[11]</a>. Average: 42.85% → 27.16%.</p>
+        </div>
+
+        <!-- Stat Card 5: Victory Margins 2015 -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-1">
+            <p class="text-lg font-semibold text-green-600 mb-2">Mayoral Victory Margins (2015)</p>
+            <p class="text-green-600 mb-3">
+                +<span class="data-counter" data-target="241005">0</span>
+            </p>
+            <p class="text-gray-600 text-sm">Vote margin for Sayeed Khokon (DSCC 2015, 535,296 votes) <a href="https://en.wikipedia.org/wiki/2015_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[10]</a>. Annisul Huq (DNCC 2015) won by 135,037 votes <a href="https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">[8]</a>.</p>
+        </div>
+
+        <!-- Stat Card 6: Victory Margins 2020 -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-2">
+            <p class="text-lg font-semibold text-blue-600 mb-2">Mayoral Victory Margins (2020)</p>
+            <p class="text-blue-600 mb-3">
+                +<span class="data-counter" data-target="183050">0</span>
+            </p>
+            <p class="text-gray-600 text-sm">Vote margin for Atiqul Islam (DNCC 2020, 447,211 votes) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">[12]</a>. Sheikh F. N. Taposh (DSCC 2020) won by 188,083 votes <a href="https://thedailystar.net/frontpage/dhaka-city-elections-voters-keep-1870148" class="data-ref" target="_blank">[9]</a>.</p>
+        </div>
+
+        <!-- Stat Card 7: Ward Expansion -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe">
+            <p class="text-lg font-semibold text-purple-600 mb-2">Ward Boundary Expansion (2017)</p>
+            <p class="text-purple-600 mb-3">
+                +<span class="data-counter" data-target="138.2" data-decimals="1">0</span>%
+            </p>
+            <p class="text-gray-600 text-sm">DNCC area increased from 82.69 km² to 197 km² <a href="https://en.wikipedia.org/wiki/Dhaka_North_City_Corporation" class="data-ref" target="_blank">[13]</a> (+138.2%) <a href="https://dbpedia.org/page/Dhaka_North_City_Corporation" class="data-ref" target="_blank">[14]</a>. Total wards remain at 54 (DNCC) + 75 (DSCC) = 129 <a href="https://en.wikipedia.org/wiki/Dhaka_South_City_Corporation" class="data-ref" target="_blank">[15]</a>.</p>
+        </div>
+
+        <!-- Stat Card 8: Party Dominance -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-1">
+            <p class="text-lg font-semibold text-green-600 mb-2">Party Political Dominance</p>
+            <p class="text-green-600 mb-3">
+                <span class="data-counter" data-target="4">0</span>
+            </p>
+            <p class="text-gray-600 text-sm">Awami League won 4 consecutive mayoral elections in 2015 & 2020 <a href="https://en.prothomalo.com/bangladesh/story/2020-02-01/Al-wins-dhaka-city-elections-1562262" class="data-ref" target="_blank">[16]</a>. BNP's sole DCC victory was 2002 (uncontested) and 1 court-declared victory (March 27, 2025) <a href="https://en.prothomalo.com/english/story/2025-03-27/high-court-confirms-election-tribunal-verdict-ishraque-bnp-dscc-mayor-1753142" class="data-ref" target="_blank">[17]</a>.</p>
+        </div>
+
+        <!-- Stat Card 9: Registered Voters -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe scroll-observe-delay-2">
+            <p class="text-lg font-semibold text-blue-600 mb-2">Registered Voter Growth (2015-2020)</p>
+            <p class="text-blue-600 mb-3">
+                +<span class="data-counter" data-target="29.8" data-decimals="1">0</span>%
+            </p>
+            <p class="text-gray-600 text-sm">DSCC grew 31.1% (1.871M to 2.453M) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[11]</a>. DNCC grew 28.4% (2.345M to 3.010M) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">[12]</a>, driven by 2017 area expansion <a href="https://en.wikipedia.org/wiki/Dhaka_North_City_Corporation" class="data-ref" target="_blank">[13]</a>.</p>
+        </div>
+
+        <!-- Stat Card 10: Electoral Annulment -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col scroll-observe">
+            <p class="text-lg font-semibold text-amber-600 mb-2">Electoral Dispute & Annulment (DSCC 2020)</p>
+            <p class="text-amber-600 mb-3">
+                <span class="data-counter" data-target="5">0</span>+ Years
+            </p>
+            <p class="text-gray-600 text-sm">Between the election (Feb 1, 2020) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[11]</a> and the Election Tribunal's annulment (Mar 27, 2025) <a href="https://en.prothomalo.com/english/story/2025-03-27/high-court-confirms-election-tribunal-verdict-ishraque-bnp-dscc-mayor-1753142" class="data-ref" target="_blank">[17]</a>. First major Bangladesh election using EVMs entirely <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">[11]</a>.</p>
+        </div>
+    </div>
+</section>
+
+
+        <!-- Interactive Charts -->
+        <section id="charts" class="mb-16">
+            <h2 class="text-center">Interactive Data Visualizations</h2>
+            
+            <!-- Turnout Collapse Chart -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-6 scroll-observe">
+                <h3 class="mt-0">Voter Turnout Collapse (2015 vs 2020)</h3>
+                <p class="text-gray-600 mb-4">A dramatic decline in voter participation was observed between the 2015 and 2020 elections, with DSCC seeing a drop of over 19 percentage points. <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></p>
+                <div class="h-96 w-full">
+                    <canvas id="turnoutChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- 2015 Vote Share -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 scroll-observe">
+                    <h3 class="mt-0">2015 Mayoral Vote Share</h3>
+                    <div class="h-80 w-full">
+                        <canvas id="voteShare2015Chart"></canvas>
+                    </div>
+                </div>
+                <!-- 2020 Vote Share -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 scroll-observe scroll-observe-delay-1">
+                    <h3 class="mt-0">2020 Mayoral Vote Share (Initial Results)</h3>
+                    <div class="h-80 w-full">
+                        <canvas id="voteShare2020Chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Population Growth Chart -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-6 scroll-observe">
+                <h3 class="mt-0">Dhaka Population Growth (1971-2022)</h3>
+                <p class="text-gray-600 mb-4">The city's population exploded from 1.897M in 1971 to over 10M by 2022 (within post-bifurcation boundaries). <a href="https://nsds.bbs.gov.bd" class="data-ref" target="_blank">BBS</a></p>
+                <div class="h-96 w-full">
+                    <canvas id="populationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Electoral Results (Tabs) -->
+        <section id="elections" class="mb-16 scroll-observe">
+            <h2>Detailed Electoral Results</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <!-- Tab Buttons -->
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-btn active" data-tab="tab-2020">2020 Elections</button>
+                        <button class="tab-btn" data-tab="tab-2019">2019 By-Election</button>
+                        <button class="tab-btn" data-tab="tab-2015">2015 Elections</button>
+                        <button class="tab-btn" data-tab="tab-unified">1994 & 2002 Elections</button>
+                    </nav>
+                </div>
+                
+                <!-- Tab Content: 2020 -->
+                <div id="tab-2020" class="tab-content active">
+                    <h3 class="mt-0">2020 Elections (February 1)</h3>
+                    <p class="text-gray-600 mb-4">First major, city-wide use of Electronic Voting Machines (EVMs), marked by historically low turnout.</p>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">DNCC 2020 Results</h4>
+                    <ul class="list-disc list-inside text-gray-700 mb-4">
+                        <li>Winner: Atiqul Islam (AL) - 447,211 votes (58.67%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Runner-Up: Tabith Awal (BNP) - 264,161 votes (34.66%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Registered Voters: 3,012,509 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Turnout: 25.30% <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                    </ul>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">DSCC 2020 Results (Initial)</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Winner (Initial): S. F. N. Taposh (AL) - 424,595 votes (60.76%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Runner-Up (Initial): M. Ishraque Hossain (BNP) - 236,512 votes (33.85%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Registered Voters: 2,453,196 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Turnout: 29.00% <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                    </ul>
+                    <div class="mt-4 p-4 bg-yellow-50 text-yellow-800 rounded-lg">
+                        Electoral Dispute: The DSCC 2020 result was annulled by an Election Tribunal on March 27, 2025. Ishraque Hossain (BNP) was declared the rightful winner. <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">Source</a>
+                    </div>
+                </div>
+                
+                <!-- Tab Content: 2019 -->
+                <div id="tab-2019" class="tab-content">
+                    <h3 class="mt-0">2019 DNCC By-Election (Feb 28)</h3>
+                    <p class="text-gray-600 mb-4">Held following the death of Mayor Annisul Huq <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a>. The main opposition BNP boycotted the election. <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></p>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Winner: Atiqul Islam (AL) - 839,302 votes (89.05%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Runner-Up: Shafin Ahmed (Jatiya Party) - 52,829 votes (5.60%) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Turnout: 31.05% <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                        <li>Context: Turnout dropped 6.25pp from 2015, despite a 29.4% increase in registered voters from the 2017 ward expansion. <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></li>
+                    </ul>
+                </div>
+
+                <!-- Tab Content: 2015 -->
+                <div id="tab-2015" class="tab-content">
+                    <h3 class="mt-0">2015 Elections (April 30)</h3>
+                    <p class="text-gray-600 mb-4">The first elections held after the 2011 bifurcation. Turnout was moderate (DNCC: 37.30%, DSCC: 48.40%). <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></p>
+                    
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">2015 Mayoral Results</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Corporation</th>
+                                    <th>Winner (AL)</th>
+                                    <th>Votes</th>
+                                    <th>Runner-Up (BNP)</th>
+                                    <th>Votes</th>
+                                    <th>Margin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>DNCC</td>
+                                    <td>Annisul Huq</td>
+                                    <td>460,117 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td>
+                                    <td>Tabith Awal</td>
+                                    <td>325,080 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td>
+                                    <td>135,037</td>
+                                </tr>
+                                <tr>
+                                    <td>DSCC</td>
+                                    <td>Sayeed Khokon</td>
+                                    <td>535,296 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td>
+                                    <td>Mirza Abbas</td>
+                                    <td>294,291 <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td>
+                                    <td>241,005</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="text-xl font-bold text-gray-800 mt-6 mb-2">2015 Councilor & Candidate Analysis</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Councilor Results (DNCC): AL (21 seats), BNP (2), Jatiya Party (1), Independents (12). <a href="https://en.wikipedia.org/wiki/2015_Dhaka_North_City_Corporation_election" class="data-ref" target="_blank">Source</a></li>
+                        <li>Councilor Results (DSCC): AL (37 seats), BNP (7), Independents (13). <a href="https://en.wikipedia.org/wiki/2015_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">Source</a></li>
+                        <li>Candidate Profession: ~70% of mayoral candidates and 71-80% of councilor candidates listed "Business". <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></li>
+                        <li>Women's Representation: 0 women ran for mayor. Only 3.97% (DNCC) and 1.89% (DSCC) of general councilor candidates were women. <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></li>
+                        <li>Election Violations: Widespread reports of spending beyond legal limits (avg. 16M in DNCC vs 5M limit <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a>).</li>
+                    </ul>
+                </div>
+
+                <!-- Tab Content: Unified -->
+                <div id="tab-unified" class="tab-content">
+                    <h3 class="mt-0">Unified DCC Elections (1994 & 2002)</h3>
+                    <p class="text-gray-600 mb-4">These were the only two direct elections held for the unified Dhaka City Corporation.</p>
+                    
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">1st DCC Election (Jan 30, 1994)</h4>
+                    <ul class="list-disc list-inside text-gray-700 mb-4">
+                        <li>Context: First-ever direct mayoral election, held under the BNP government.</li>
+                        <li>Winner: Mohammad Hanif (Awami League) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></li>
+                        <li>Runner-Up: Mirza Abbas (BNP)</li>
+                        <li>Margin: Hanif won by over 100,000 votes, a significant victory for the opposition. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></li>
+                    </ul>
+
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">2nd DCC Election (Apr 25, 2002)</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Context: Held under the BNP government. The main opposition Awami League boycotted the election. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></li>
+                        <li>Winner: Sadeque Hossain Khoka (BNP)</li>
+                        <li>Result: Won uncontested (বিনা প্রতিদ্বন্দ্বিতায়) as Mayor. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></li>
+                        <li>Note: This was the last election for the 92-ward unified DCC. <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Demographics & Admin -->
+        <section id="demographics" class="mb-16 scroll-observe">
+            <h2>Detailed Demographics & Administration</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Demographics -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="mt-0">Demographic Profile (2022 Census)</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-3">
+                        <li>Gender Composition: For the first time, a female-majority was recorded, reflecting the national trend (50.46% F vs 49.54% M). <a href="https://nsds.bbs.gov.bd" class="data-ref" target="_blank">BBS</a></li>
+                        <li>Age Cohort: High urban migration drives a young population, with ~40% aged 18-35. <a href="https://www.dhsprogram.com/data" class="data-ref" target="_blank">DHS</a></li>
+                        <li>Urban Density (DNCC): 30,531 persons/km². <a href="https://nsds.bbs.gov.bd" class="data-ref" target="_blank">BBS</a></li>
+                        <li>Urban Density (DSCC): ~39,400 persons/km² (Among the world's highest). <a href="https://nsds.bbs.gov.bd" class="data-ref" target="_blank">BBS</a></li>
+                        <li>Migration: Rapid growth from 1971-2001 (5-6% CAGR <a href="https://nsds.bbs.gov.bd" class="data-ref" target="_blank">BBS</a>) has slowed, but migration remains the primary driver of change.</li>
+                        <li>Informal Settlements: An estimated 2-3 million people (20-25% of the city) live in informal slums. <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></li>
+                    </ul>
+                </div>
+                <!-- Admin Changes -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="mt-0">Ward Boundary Changes</h3>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Bifurcation (Nov 29, 2011)</h4>
+                    <p class="text-gray-700 mb-4">The unified 90-ward DCC was dissolved. <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a> It was split into DNCC (initial 54 wards, 82.69 km²) and DSCC (initial 57 wards, ~109 km²). The 2015 election was held on this map.</p>
+                    
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Expansion (July 29, 2017)</h4>
+                    <p class="text-gray-700 mb-4">36 new wards were added (18 to each corporation) by absorbing surrounding unions. <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a> This fundamentally altered the 2020 voter base.</p>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>DNCC: Grew by +138% to 197 km². <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a></li>
+                        <li>DSCC: Grew by +59% to ~173 km². <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Events Timeline -->
+        <section id="timeline" class="mb-16 scroll-observe">
+            <h2>Key Events Timeline (1971–2025)</h2>
+            <div class="relative border-l-4 border-indigo-200 ml-6 py-8">
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">1971–1994: Appointed Era</h3>
+                    <time class="block mb-2 text-sm font-normal leading-none text-gray-500">Duration: 23 Years</time>
+                    <p class="text-base font-normal text-gray-600">Dhaka's municipal body is run by government-appointed administrators. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-green-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Jan 30, 1994: First Direct Election</h3>
+                    <p class="text-base font-normal text-gray-600">Mohammad Hanif (AL) wins, defeating Mirza Abbas (BNP) by over 100,000 votes. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Apr 25, 2002: Second Election</h3>
+                    <p class="text-base font-normal text-gray-600">Sadeque Hossain Khoka (BNP) wins uncontested as the Awami League boycotts the election. <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1zM16 9a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Nov 29, 2011: Bifurcation Approved</h3>
+                    <p class="text-base font-normal text-gray-600">The unified DCC is dissolved, creating Dhaka North (DNCC) and Dhaka South (DSCC). <a href="https://lged.gov.bd" class="data-ref" target="_blank">LGD</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-green-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Apr 30, 2015: First Bifurcated Elections</h3>
+                    <p class="text-base font-normal text-gray-600">Annisul Huq (DNCC) and Sayeed Khokon (DSCC) win for the Awami League. <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="mb-10 ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-red-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Feb 1, 2020: Second Bifurcated Elections</h3>
+                    <p class="text-base font-normal text-gray-600">AL wins both seats (initial results). Turnout collapses to a historic low of 27.15%. <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></p>
+                </div>
+                <!-- Timeline Item -->
+                <div class="ml-10 scroll-observe">
+                    <span class="absolute flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-full -left-5 ring-8 ring-white">
+                        <svg class="w-5 h-5 text-yellow-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 11a1 1 0 100-2H5a1 1 0 100 2h4z"></path><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5.268l4.14 2.514a1 1 0 01.293 1.352l-2.942 4.818a1 1 0 01-1.554.294L10 13.568V21a1 1 0 01-2 0v-7.432l-2.06.823a1 1 0 01-1.293-1.011L6.76 4.954a1 1 0 011.352-.294L11 7.232V2a1 1 0 01.3-.954z" clip-rule="evenodd"></path></svg>
+                    </span>
+                    <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">Mar 27, 2025: Historic Legal Reversal</h3>
+                    <p class="text-base font-normal text-gray-600">Election Tribunal annuls the 2020 DSCC result, declaring BNP's Ishraque Hossain the winner. <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">Source</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Full Mayoral Succession -->
+        <section id="succession" class="mb-16 scroll-observe">
+            <h2>Full Mayoral & Administrative Succession (1971–2025)</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <!-- Tab Buttons -->
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-btn active" data-tab="tab-bifurcated">Phase 4: Bifurcated (2011-Present)</button>
+                        <button class="tab-btn" data-tab="tab-elected-unified">Phase 3: Elected Unified (1994-2011)</button>
+                        <button class="tab-btn" data-tab="tab-appointed">Phase 1 & 2: Appointed (1971-1994)</button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content: Bifurcated -->
+                <div id="tab-bifurcated" class="tab-content active">
+                    <h3 class="mt-0">Phase 4: Bifurcated Dual-Mayor Era (2011-Present)</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Corporation</th><th>Period</th><th>Name</th><th>Party/Status</th></tr></thead>
+                            <tbody>
+                                <tr><td rowspan="5" class="font-bold align-top">DNCC</td><td>2015–2017</td><td>Annisul Huq</td><td>Awami League (Elected) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td></tr>
+                                <tr><td>2017–2019</td><td>Osman Goni / Md. Jamal Mostafa</td><td>AL (Acting) <a href="https://en.wikipedia.org/wiki/List_of_mayors_of_North_Dhaka" class="data-ref" target="_blank">Source</a></td></tr>
+                                <tr><td>2019–2024</td><td>Atiqul Islam</td><td>Awami League (Elected) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td></tr>
+                                <tr><td>2024–2025</td><td>Mohammed Mahmudul Hassan</td><td>Independent (Administrator) <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></td></tr>
+                                <tr><td>2025–Present</td><td>Mohammad Ejaz</td><td>Independent (Administrator) <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a></td></tr>
+                                <tr><td rowspan="3" class="font-bold align-top">DSCC</td><td>2015–2020</td><td>Sayeed Khokon</td><td>Awami League (Elected) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td></tr>
+                                <tr><td>2020–2024</td><td>Sheikh Fazle Noor Taposh</td><td>AL (Elected - Result Annulled) <a href="https://ecs.gov.bd" class="data-ref" target="_blank">BEC</a></td></tr>
+                                <tr><td>2025–Present</td><td>Mohammad Ishraque Hossain</td><td>BNP (Court-declared Winner) <a href="https://en.wikipedia.org/wiki/2020_Dhaka_South_City_Corporation_election" class="data-ref" target="_blank">Source</a></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Elected Unified -->
+                <div id="tab-elected-unified" class="tab-content">
+                    <h3 class="mt-0">Phase 3: Elected Unified Era (1994-2011)</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Period</th><th>Name</th><th>Party/Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>1994–2002</td><td>Mohammad Hanif</td><td>Awami League (Elected) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                                <tr><td>2002–2011</td><td>Sadeque Hossain Khoka</td><td>BNP (Elected - Uncontested) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Appointed -->
+                <div id="tab-appointed" class="tab-content">
+                    <h3 class="mt-0">Phase 1 & 2: Appointed Era (1971-1994)</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Period</th><th>Name</th><th>Party/Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>1971–1977</td><td>Lt Col Hesamuddin Ahmed</td><td>Appointed Military Admin</td></tr>
+                                <tr><td>1977–1982</td><td>Abul Hasnat</td><td>BNP (Appointed) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                                <tr><td>1982–1986</td><td>Post vacant</td><td>Military Rule</td></tr>
+                                <tr><td>1986–1989</td><td>Mohammad Abdul Malek</td><td>Jatiya Party (Appointed) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                                <tr><td>1989–1990</td><td>Naziur Rahman Manzur</td><td>Jatiya Party (Appointed) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                                <tr><td>1990–1994</td><td>Mirza Abbas</td><td>BNP (Appointed) <a href="https://en.wikipedia.org/wiki/Dhaka_City_Corporation" class="data-ref" target="_blank">Source</a></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Gaps & Sources -->
+        <section id="sources" class="mb-16 scroll-observe">
+            <h2>Data Limitations & Sources</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Data Gaps -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="mt-0">Data Gaps & Limitations</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Pre-2015 Ward Data: Ward-level results for 1994 and 2002 are not digitized, preventing granular historical analysis.</li>
+                        <li>Campaign Finance: No mandatory, transparent reporting framework. Spending limits (e.g., 5M in DNCC 2015 <a href="httpss://www.thedailystar.net" class="data-ref" target="_blank">Media</a>) were widely ignored.</li>
+                        <li>Administrative Gaps: Records for appointed administrators, especially during military rule (1982-1986), are sparse.</li>
+                        <li>Demographic Links: Detailed ward-level census data from 2022 is not yet public, limiting analysis on turnout predictors.</li>
+                    </ul>
+                </div>
+                <!-- Data Sources -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="mt-0">Primary Data Sources</h3>
+                    <ul class="list-none space-y-3">
+                        <li>
+                            <a href="https://ecs.gov.bd" target="_blank" class="block p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 transition">
+                                <span class="font-bold text-indigo-600">Bangladesh Election Commission (BEC)</span>
+                                <span class="block text-sm text-gray-600">Official results, turnout, voter registration, and gazettes.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://nsds.bbs.gov.bd" target="_blank" class="block p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 transition">
+                                <span class="font-bold text-indigo-600">Bangladesh Bureau of Statistics (BBS)</span>
+                                <span class="block text-sm text-gray-600">All population, density, and household data (1971-2022).</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://lged.gov.bd" target="_blank" class="block p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 transition">
+                                <span class="font-bold text-indigo-600">Local Government Division (LGD)</span>
+                                <span class="block text-sm text-gray-600">Official gazettes on bifurcation (2011) and ward expansion (2017).</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="httpss://www.thedailystar.net" target="_blank" class="block p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 transition">
+                                <span class="font-bold text-indigo-600">Media & Academic Archives</span>
+                                <span class="block text-sm text-gray-600">Context from Daily Star, Prothom Alo, Wikipedia, etc.</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-semibold text-white mb-2">Dhaka Electoral & Demographic Analysis (1971–2025)</p>
+            <p class="text-sm">Report compiled: November 10, 2025.</p>
+            <p class="text-xs mt-4">This interactive report was generated from public data (BEC, BBS, LGD) and media archives. It is for informational purposes only. All data is cross-referenced from the original reports.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Mobile Menu Toggle Script
+        document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+            var menu = document.getElementById('mobile-menu');
+            var icons = this.querySelectorAll('svg');
+            menu.classList.toggle('hidden');
+            icons[0].classList.toggle('hidden'); // Hamburger
+            icons[0].classList.toggle('block');
+            icons[1].classList.toggle('hidden'); // Close
+            icons[1].classList.toggle('block');
+        });
+
+        // Tabbed Interface Script
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Deactivate all
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Activate clicked
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Scroll Animations (Fade-in & Counter)
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- IntersectionObserver for Scroll-in Animations ---
+            const scrollObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        
+                        // --- Check for Counters within the visible element ---
+                        const counters = entry.target.querySelectorAll('.data-counter');
+                        counters.forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const decimals = +counter.getAttribute('data-decimals') || 0;
+                            const duration = 1500; // 1.5 seconds
+                            const start = 0;
+                            let startTime = null;
+
+                            const animateCounter = (timestamp) => {
+                                if (!startTime) startTime = timestamp;
+                                const progress = timestamp - startTime;
+                                const easedProgress = Math.min(progress / duration, 1);
+                                
+                                // Ease-out quad function
+                                const easedValue = 1 - Math.pow(1 - easedProgress, 3);
+                                
+                                const currentValue = start + (target - start) * easedValue;
+                                counter.innerText = currentValue.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                
+                                if (progress < duration) {
+                                    requestAnimationFrame(animateCounter);
+                                } else {
+                                    counter.innerText = target.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                }
+                            };
+                            requestAnimationFrame(animateCounter);
+                        });
+                        
+                        // Stop observing once animated
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            // Observe all elements with the class
+            document.querySelectorAll('.scroll-observe').forEach(el => {
+                scrollObserver.observe(el);
+            });
+
+
+            // --- Chart.js Scripts ---
+            
+            // 1. Turnout Chart
+            const turnoutCtx = document.getElementById('turnoutChart');
+            if (turnoutCtx) {
+                new Chart(turnoutCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['DNCC 2015', 'DNCC 2020', 'DSCC 2015', 'DSCC 2020'],
+                        datasets: [
+                            {
+                                label: '2015 Turnout',
+                                data: [37.30, 0, 48.40, 0],
+                                backgroundColor: 'rgba(79, 70, 229, 0.7)', // indigo-600
+                                borderColor: 'rgba(79, 70, 229, 1)',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            },
+                            {
+                                label: '2020 Turnout',
+                                data: [0, 25.30, 0, 29.00],
+                                backgroundColor: 'rgba(225, 29, 72, 0.7)', // rose-600
+                                borderColor: 'rgba(225, 29, 72, 1)',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Turnout Percentage (%)', font: { size: 14 } },
+                                grid: { color: '#e5e7eb' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { size: 14 }} },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null && context.parsed.y > 0) {
+                                            label += context.parsed.y + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Population Chart
+            const populationCtx = document.getElementById('populationChart');
+            if (populationCtx) {
+                new Chart(populationCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1971', '1981', '1991', '2001', '2011', '2022'],
+                        datasets: [{
+                            label: 'Total Dhaka Population (in Millions)',
+                            data: [1.897, 3.440, 6.487, 10.712, 14.873, 10.229],
+                            fill: true,
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)', // teal-600 transparent
+                            borderColor: 'rgba(13, 148, 136, 1)', // teal-600
+                            tension: 0.1,
+                            pointRadius: 4,
+                            pointBackgroundColor: 'rgba(13, 148, 136, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Population (Millions)', font: { size: 14 } },
+                                grid: { color: '#e5e7eb' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { font: { size: 14 }} },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y + 'M';
+                                            if (context.dataIndex === 5) {
+                                                label += ' (Post-Bifurcation Boundaries)';
+                                            }
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. 2015 Vote Share Chart
+            const voteShare2015Ctx = document.getElementById('voteShare2015Chart');
+            if (voteShare2015Ctx) {
+                new Chart(voteShare2015Ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Annisul Huq (AL, DNCC)', 'Tabith Awal (BNP, DNCC)', 'Sayeed Khokon (AL, DSCC)', 'Mirza Abbas (BNP, DSCC)', 'Others'],
+                        datasets: [{
+                            label: 'Vote Share',
+                            data: [460117, 325080, 535296, 294291, (18050 + 13407 + 20338 + 32550)], // Summing others
+                            backgroundColor: [
+                                '#15803d', // AL Green (Dark)
+                                '#0284c7', // BNP Blue (Dark)
+                                '#22c55e', // AL Green (Light)
+                                '#38bdf8', // BNP Blue (Light)
+                                '#9ca3af'  // Gray
+                            ],
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: '2015 DNCC & DSCC Vote Distribution', font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+            // 4. 2020 Vote Share Chart
+            const voteShare2020Ctx = document.getElementById('voteShare2020Chart');
+            if (voteShare2020Ctx) {
+                new Chart(voteShare2020Ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Atiqul Islam (AL, DNCC)', 'Tabith Awal (BNP, DNCC)', 'S.F.N. Taposh (AL, DSCC)', 'I. Hossain (BNP, DSCC)', 'Others'],
+                        datasets: [{
+                            label: 'Vote Share',
+                            data: [447211, 264161, 424595, 236512, (28200 + 15122 + 3853 + 2111 + 26525 + 5593 + 3155 + 2421)], // Summing others
+                            backgroundColor: [
+                                '#15803d', // AL Green (Dark)
+                                '#0284c7', // BNP Blue (Dark)
+                                '#22c55e', // AL Green (Light)
+                                '#38bdf8', // BNP Blue (Light)
+                                '#9ca3af'  // Gray
+                            ],
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: '2020 DNCC & DSCC Vote Distribution', font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
